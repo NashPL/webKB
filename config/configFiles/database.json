@@ -1,0 +1,6 @@
+{
+  "mongodb": {
+    "url": "localhost",
+    "bucket": "bucket"
+  }
+}
