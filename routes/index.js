@@ -1,7 +1,10 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+
+const _SECURITY = require('/srv/webkb_mean/application/_SECURITY.JS');
 
 const db = JSON.parse(fs.readFileSync('/srv/webkb_mean/config/configFiles/database.json', 'utf8'));
 mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main');
@@ -11,30 +14,36 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index.html');
+    privilege: "*"
+    req.session.user = {};
+    req.session.browserInformation = req.headers['user-agent'];
+    res.render('index.html');
 });
 
 router.get('/_json', function(req, res, next) {
-  //TODO: Check for user privilege and return appropriet data (maybe diffrent query ?);
-  webkbSchema.find({}, function(err, ret) {
-    if (err) {
-      console.log(err);
-    }
-    res.json(ret);
-  })
+    webkbSchema.find({}, function(err, ret) {
+        if (err) {
+            console.log(err);
+        }
+        req.session.user = {
+            privilege: "*"
+        }
+        let returnVal = _SECURITY.check_user_access(req.session.user, ret);
+        res.json(returnVal);
+    })
 });
 
 router.post('/_json', function(req, res, next) {
-  //TODO: Only Admin Developers and Post here
-  if (!req.body) return res.sendStatus(400)
-  let newModule = new webkbSchema(req.body);
-  newModule.save(function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(200);
-    }
-  });
+    //TODO: Only Admin Developers and Post here
+    if (!req.body) return res.sendStatus(400)
+    let newModule = new webkbSchema(req.body);
+    newModule.save(function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(200);
+        }
+    });
 });
 
 module.exports = router;
