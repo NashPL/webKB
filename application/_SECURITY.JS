@@ -30,4 +30,28 @@ module.exports = class _SECURITY {
             return hash;
         });
     }
+
+    static is_admin(user_session) {
+        if (typeof user_session.username === 'undefined' || user_session.username === null) return false;
+        if (typeof user_session.privilege === 'undefined' || user_session.privilege === null) return false;
+
+        let userName = user_session.username;
+        let privilege = user_session.privilege;
+
+        privilege = privilege.split(";");
+
+        //Check one if user  == CREATOR KBuczynski
+        if (userName === 'kbuczynski') {
+            return true;
+        }
+
+        //Chec for admin privilege
+        for (let singPriv of privilege) {
+            if (singPriv === "ADMIN") {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

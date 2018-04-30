@@ -6,22 +6,31 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-
-const _Utils = require('./application/_Utils');
+const redis = require('redis');
+const redisStore = require('connect-redis')(session);
+const client = redis.createClient();
 
 const app = express();
+
+const _UTILS = require('./application/_UTILS');
+
+app.use(session({
+    secret: _UTILS.getHashedValue(),
+    // create new redis store.
+    store: new redisStore({
+        host: 'localhost',
+        port: 6379,
+        client: client,
+        ttl: 36000
+    }),
+    saveUninitialized: false,
+    resave: false
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({
-    secret: _Utils.getHashedValue(),
-    cookie: {
-        expires: new Date(Date.now() + 3600000),
-        maxAge: 3600000
-    },
-}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
