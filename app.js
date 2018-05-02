@@ -5,14 +5,20 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const session = require('express-session');
 const redis = require('redis');
+const mongoose = require('mongoose');
 const redisStore = require('connect-redis')(session);
 const client = redis.createClient();
 
 const app = express();
 
 const _UTILS = require('./application/_UTILS');
+
+const db = JSON.parse(fs.readFileSync('/srv/webkb_mean/config/configFiles/database.json', 'utf8'));
+
+mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main');
 
 app.use(session({
     secret: _UTILS.getHashedValue(),
@@ -53,13 +59,13 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
+// app.use(function(err, req, res, next) {
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
 module.exports = app;

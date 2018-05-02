@@ -1,14 +1,10 @@
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const fs = require('fs');
 const path = require('path');
 
-const _SECURITY = require('/srv/webkb_mean/application/_SECURITY.JS');
+const _SECURITY = require('/srv/webkb_mean/application/_SECURITY');
 const _UTILS = require('/srv/webkb_mean/application/_UTILS');
-const db = JSON.parse(fs.readFileSync('/srv/webkb_mean/config/configFiles/database.json', 'utf8'));
-
-mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main');
 
 const webkbSchema = require('./../mdb_schema/webKB-main');
 const router = express.Router();
@@ -47,9 +43,15 @@ router.post('/_json', function(req, res, next) {
         } else {
             res.status(200).json({
                 message: 'OK'
-            });;
+            });
         }
     });
+});
+
+router.post('/logout', function(req, res, next) {
+    if (!req.body) return res.sendStatus(400);
+    req.session.destroy();
+    res.sendStatus(200);
 });
 
 module.exports = router;

@@ -1,4 +1,7 @@
 module.exports = function(app) {
     app.use('/', require('./../routes/index'));
-    //app.use('/login', require('./../routes/login'));
+
+    //LOGIN MODULE:
+    app.use('/login', require('./../routes/LOGIN/login'));
+    app.use('/signin', require('./../routes/LOGIN/signin'));
 }

@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 module.exports = class _SECURITY {
     static check_user_access(user, modules) {
@@ -21,14 +22,14 @@ module.exports = class _SECURITY {
     }
 
     static string_to_bcrypt(str) {
-        bcrypt.hash(str, 10, function(err, hash) {
-            if (err) {
-                //TODO: HANDLE ERR (maybe make a function in _UTILS)
-                console.log(err);
-                return;
-            }
-            return hash;
-        });
+        let salt = bcrypt.genSaltSync(10);
+        return bcrypt.hashSync(str, salt);
+    }
+
+    static string_to_sha1(str) {
+        let shasum = crypto.createHash('sha1');
+        shasum.update(str);
+        return shasum.digest('hex');
     }
 
     static is_admin(user_session) {

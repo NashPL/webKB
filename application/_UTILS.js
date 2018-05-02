@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs');
+const sendmail = require('sendmail')();
 
 /**
  * A class which handles or utilities of a paltform.
