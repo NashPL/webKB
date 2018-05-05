@@ -19,6 +19,7 @@ const _UTILS = require('./application/_UTILS');
 const db = JSON.parse(fs.readFileSync('/srv/webkb_mean/config/configFiles/database.json', 'utf8'));
 
 mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main');
+mongoose.Promise = Promise;
 
 app.use(session({
     secret: _UTILS.getHashedValue(),
@@ -44,7 +45,7 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: true
 }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'views')));
