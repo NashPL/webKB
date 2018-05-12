@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 const mongoose = require('mongoose');
@@ -36,16 +35,6 @@ module.exports = class _SECURITY {
         } catch (err) {
             _UTILS.errorHandler(err, false, true);
         }
-    }
-
-    /**
-     * Creates a bcrypt of a given string
-     * @param  {[string]} str holds a string to be bcrypt
-     * @return {[string]}     return bcrypted string
-     */
-    static string_to_bcrypt(str) {
-        let salt = bcrypt.genSaltSync(10);
-        return bcrypt.hashSync(str, salt);
     }
 
     /**

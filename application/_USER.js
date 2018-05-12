@@ -32,6 +32,9 @@ module.exports = class _USER {
         let user_dob = user_object['dob'];
         let user_email = user_object['email'];
         let user_permission = '';
+        let user_secret_p = user_object['user_secret_p'];
+        let user_secret_q = _UTILS.getHashedValue(user_object['user_secret_q']);
+
         if (!user_object['user_permission']) {
             user_permission = "*";
         } else {
@@ -62,7 +65,9 @@ module.exports = class _USER {
                     user_email: user_email,
                     user_dob: user_dob,
                     user_permission: user_permission,
-                    user_email_validated: false
+                    user_email_validated: false,
+                    user_secret_p: user_secret_p,
+                    user_secret_q: user_secret_q
                 });
                 await userObject.save();
             }
@@ -115,6 +120,48 @@ module.exports = class _USER {
             subject: 'SimplyWebKB email confirmation',
             html: '<h1>Welcome</h1><p>To validate the email please follow the link:</p><br/>' +
                 '<p><a href="http://localhost:3000/signin/confirm/' + object.user_email_validation + '"</a>http://localhost:3000/signin/confirm/' + object.user_email_validation + '</p>'
+        };
+
+        await transporter.sendMail(mailOptions, async function(err, info) {
+            if (err) {
+                _UTILS.errorHandler(err, false, true, null, function(callbackResponse) {
+                    if (callbackResponse.status === 500) {
+                        console.log(callbackResponse.msg);
+                    }
+                });
+            } else {
+                console.log('Email sent: ' + info.response);
+                client.set(object.user_email_validation, JSON.stringify(object));
+            }
+        });
+    }
+
+    async get_user_by_email(email, object) {
+        let user = await webkbuser.findOne({
+            'user_email': username
+        }).then(user => {
+            if (!user) return false;
+            return user;
+        }).catch(err => {
+            _UTILS.errorHandler(err, false, true);
+        });
+    }
+
+    async send_reset_psw_email(email, hashedID) {
+        let transporter = nodemailer.createTransport({
+            service: 'outlook',
+            auth: {
+                user: 'simplywebkb@outlook.com',
+                pass: '7arIpyKecp'
+            }
+        });
+
+        let mailOptions = {
+            from: 'simplywebkb@outlook.com',
+            to: email,
+            subject: 'SimplyWebKB email confirmation',
+            html: '<h1>Welcome</h1><p>To validate the email please follow the link:</p><br/>' +
+                '<p><a href="http://localhost:3000/forgotPassword' + hashedID + '"</a>http://localhost:3000/forgotPassword' + hashedID + '</p>'
         };
 
         await transporter.sendMail(mailOptions, async function(err, info) {

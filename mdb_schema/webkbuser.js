@@ -9,7 +9,9 @@ let webkbuser = new Schema({
     user_dob: String,
     user_email: String,
     user_permission: Array,
-    user_email_validated: Boolean
+    user_email_validated: Boolean,
+    user_secret_q: String,
+    user_secret_p: String
 });
 
 module.exports = mongoose.model('webkbuser', webkbuser);

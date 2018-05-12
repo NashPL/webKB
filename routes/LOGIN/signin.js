@@ -36,7 +36,6 @@ router.post('/', function(req, res, next) {
 
     let user = new _USER();
     user.new_user(req.body.usr, req.body.psw, signinObject).then(async newUser => {
-        console.log(newUser);
         if (newUser === false) return res.sendStatus(401);
         if (newUser.status === false) return res.json(newUser);
         req.session.active = true;

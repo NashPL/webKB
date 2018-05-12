@@ -4,4 +4,5 @@ module.exports = function(app) {
     //LOGIN MODULE:
     app.use('/login', require('./../routes/LOGIN/login'));
     app.use('/signin', require('./../routes/LOGIN/signin'));
+    app.use('/forgotpassword', require('./../routes/LOGIN/forgotPassword'));
 }
