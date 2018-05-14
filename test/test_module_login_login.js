@@ -11,7 +11,7 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('module/LOGIN/login.js', () => {
-    it('/POST /login => It should attempt a login POST but with no data returing status 400', (done) => {
+    it('/POST / => It should attempt a login POST but with no data returing status 400', (done) => {
         chai.request(app)
             .post('/login')
             .then((res) => {
@@ -23,7 +23,7 @@ describe('module/LOGIN/login.js', () => {
                 throw err;
             });
     });
-    it('/POST /login => It should attempt to login POST but with just a password returing status 400', (done) => {
+    it('/POST / => It should attempt to login POST but with just a password returing status 400', (done) => {
         let json = {};
         json.psw = 'testuser'
         chai.request(app)
@@ -38,7 +38,7 @@ describe('module/LOGIN/login.js', () => {
                 throw err;
             });
     });
-    it('/POST /login => It should attempt to login POST but with just a username returing status 400', (done) => {
+    it('/POST / => It should attempt to login POST but with just a username returing status 400', (done) => {
         let json = {};
         json.usr = 'testuser'
         chai.request(app)
@@ -54,7 +54,7 @@ describe('module/LOGIN/login.js', () => {
             });
     });
 
-    it('/POST /login => It should attempt to login POST', (done) => {
+    it('/POST / => It should attempt to login POST', (done) => {
         let json = {};
         json.usr = 'testuser';
         json.psw = 'mochatesting197';
