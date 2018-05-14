@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const assert = require('assert');
-const _Utils = require('/srv/webkb_mean/application/_UTILS');
+const _Utils = require('./../application/_UTILS');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;

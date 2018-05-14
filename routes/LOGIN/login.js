@@ -2,8 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 
-const _USER = require('/srv/webkb_mean/application/_USER');
-const _UTILS = require('/srv/webkb_mean/application/_UTILS');
+const _USER = require('./../../application/_USER');
+const _UTILS = require('./../../application/_UTILS');
 
 
 const router = express.Router();

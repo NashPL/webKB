@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const redis = require('redis');
 const client = redis.createClient(6379, 'localhost');
 
-const _USER = require('/srv/webkb_mean/application/_USER');
-const _SECURITY = require('/srv/webkb_mean/application/_SECURITY');
-const _UTILS = require('/srv/webkb_mean/application/_UTILS');
+const _USER = require('./../../application/_USER');
+const _SECURITY = require('./../../application/_SECURITY');
+const _UTILS = require('./../../application/_UTILS');
 
 const webkbuser = require('./../../mdb_schema/webkbuser');
 

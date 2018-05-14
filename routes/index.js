@@ -3,8 +3,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const _SECURITY = require('/srv/webkb_mean/application/_SECURITY');
-const _UTILS = require('/srv/webkb_mean/application/_UTILS');
+const _SECURITY = require('./../application/_SECURITY');
+const _UTILS = require('./../application/_UTILS');
 
 const webkbmodule = require('./../mdb_schema/webkbmodule');
 const router = express.Router();

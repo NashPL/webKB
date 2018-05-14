@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const assert = require('assert');
-const _Utils = require('/srv/webkb_mean/application/_UTILS');
+const _Utils = require('./../application/_UTILS');
 
 describe('Application/_Utils.js', () => {
     it('FUNCTION getHashedValue() => It should return a hashed value generated from random number', (done) => {

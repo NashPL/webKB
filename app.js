@@ -16,7 +16,7 @@ const app = express();
 
 const _UTILS = require('./application/_UTILS');
 
-const db = JSON.parse(fs.readFileSync('/srv/webkb_mean/config/configFiles/database.json', 'utf8'));
+const db = JSON.parse(fs.readFileSync('./config/configFiles/database.json', 'utf8'));
 
 if (process.env.NODE_ENV === "test") {
     //TODO: ADD TEST MONGODB URL
