@@ -17,17 +17,8 @@ module.exports = class _SECURITY {
             let returnModules = {};
             for (let module of modules) {
                 for (let usr_per of user.user_permission) {
-                    if (module.module_privilege.includes(';')) {
-                        let moduleArray = module.module_privilege.split(';');
-                        for (let singleModulePer of moduleArray) {
-                            if (singleModulePer === usr_per) {
-                                returnModules[module.module_name] = module;
-                            }
-                        }
-                    } else {
-                        if (module.module_privilege === usr_per) {
-                            returnModules[module.module_name] = module;
-                        }
+                    if (module.module_privilege === usr_per) {
+                        returnModules[module.module_name] = module;
                     }
                 }
             }
@@ -54,13 +45,11 @@ module.exports = class _SECURITY {
      * @return {Boolean}              Returns true if user is a admin or false if it is not
      */
     static is_admin(user_session) {
-        if (typeof user_session.username === 'undefined' || user_session.username === null) return false;
-        if (typeof user_session.privilege === 'undefined' || user_session.privilege === null) return false;
+        if (typeof user_session.user_username === 'undefined' || user_session.username === null) return false;
+        if (typeof user_session.user_permission === 'undefined' || user_session.privilege === null) return false;
 
-        let userName = user_session.username;
-        let privilege = user_session.privilege;
-
-        privilege = privilege.split(";");
+        let userName = user_session.user_username;
+        let privilege = user_session.user_permission;
 
         //Check one if user  == CREATOR KBuczynski
         if (userName === 'kbuczynski') {

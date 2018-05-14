@@ -17,8 +17,10 @@ const router = express.Router();
  * @return {[Function]}    Carry on with the route path
  */
 router.use('*', function(req, res, next) {
-    req.session.user = {};
-    req.session.user.user_permission = ['*'];
+    if (!req.session.user) {
+        req.session.user = {};
+        req.session.user.user_permission = ['*'];
+    }
     next();
 })
 
@@ -29,7 +31,7 @@ router.use('*', function(req, res, next) {
  * @return {[type]}        Loads a index.html page
  */
 router.get('/', function(req, res) {
-    res.send("Welcome to this page for the first time!");
+    res.status(200).send("Welcome to this page for the first time!");
 });
 
 /**
@@ -44,7 +46,7 @@ router.get('/_json', function(req, res, next) {
         res.sendStatus(403);
     }
     _SECURITY.check_user_access_all_modules(req.session.user).then(modules => {
-        res.json(modules);
+        res.status(200).json(modules);
     }).catch(err => {
         let errorMsg = {};
         errorMsg.statusCode = 500;
@@ -60,20 +62,36 @@ router.get('/_json', function(req, res, next) {
  * @param  {Function} next FUNCTION next
  * @return {[type]}        Sends response status back to a user
  */
-router.post('/_json', async function(req, res, next) {
-    if (!req.body) return res.sendStatus(400);
-    if (!_SECURITY.is_admin(req.session.user)) return res.sendStatus(403).end();
-    const newModule = new webkbmodule(req.body);
+router.post('/_json', async (req, res, next) => {
+    if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
+        'err': {
+            'message': "NO POST DATA"
+        }
+    });
+    if (!_SECURITY.is_admin(req.session.user)) return res.status(403).json({
+        'err': {
+            'message': 'ACCESS DENIED'
+        }
+    });
+    const moduleQuery = {
+        _id: req.body._id
+    };
     try {
         let responseMsg = {};
-        newModule.save().then(response => {
-            responseMsg.statusCode = 200;
-            responseMsg.msg = response;
-            res.json(responseMsg);
-        }).catch(err => {
-            responseMsg.statusCode = 500;
-            responseMsg.msg = err;
-            res.json(erroMresponseMsgsg);
+        let module = await webkbmodule.find(moduleQuery);
+        webkbmodule.findOneAndUpdate(moduleQuery, req.body, {
+            upsert: true
+        }, (err, ret) => {
+            if (err) return res.status(500).json({
+                'err': {
+                    'message': err
+                }
+            });
+            return res.status(200).json({
+                'success': {
+                    'message': "ENTRY HAS BEEN UPDATED"
+                }
+            })
         });
     } catch (err) {
         _UTILS.errorHandler(err, false, true);
@@ -88,9 +106,22 @@ router.post('/_json', async function(req, res, next) {
  * @return {[status]}      Sends back status to a user
  */
 router.post('/logout', function(req, res, next) {
-    if (!req.body) return res.sendStatus(400);
+    if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
+        'err': {
+            'message': 'NO POST DATA'
+        }
+    });
+    if (!req.body.logout || req.body.logout === false) return res.status(400).json({
+        'err': {
+            'message': 'WRONG POST DATA'
+        }
+    })
     req.session.destroy();
-    res.sendStatus(200);
+    res.status(200).json({
+        'success': {
+            'message': 'YOU HAVE LOGGED OUT'
+        }
+    });
 });
 
 module.exports = router;

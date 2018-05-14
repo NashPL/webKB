@@ -3,6 +3,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 
 const _USER = require('/srv/webkb_mean/application/_USER');
+const _UTILS = require('/srv/webkb_mean/application/_UTILS');
+
 
 const router = express.Router();
 
@@ -36,19 +38,40 @@ router.get('/', function(req, res, next) {
  * @param  {Function} next FUNCTION next
  * @return {[status]}      Sends status code back to a user
  */
-router.post('/', async function(req, res, next) {
-    if (!req.body) return res.sendStatu(400);
-    if (!req.body.usr) return res.sendStatus(400);
-    if (!req.body.psw) return res.sendStatus(400);
+router.post('/', async (req, res, next) => {
+    if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
+        'err': {
+            'message': "NO POST DATA"
+        }
+    });
+    if (!req.body.usr) return res.status(400).json({
+        'err': {
+            'message': "NO USERNAME PROVIDED"
+        }
+    });
+    if (!req.body.psw) return res.status(400).json({
+        'err': {
+            'message': "NO PASSWORD PROVIDED"
+        }
+    });
     let user = new _USER();
     await user.login_user(req.body.usr, req.body.psw).then(ret => {
         if (ret === false) return res.sendStatus(401);
         req.session.active = true;
         req.session.user = ret;
-        res.sendStatus(200);
+        return res.status(200).json({
+            'success': {
+                'message': 'YOU HAVE LOGGED IN',
+                'SESSION': req.session
+            }
+        });
     }).catch(err => {
         _UTILS.errorHandler(err, false, true);
-        res.sendStatus(500);
+        return res.status(500).json({
+            'err': {
+                'message': err
+            }
+        });
     });
 });
 

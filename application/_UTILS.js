@@ -76,12 +76,13 @@ module.exports = class _Utils {
      * A function which writes a data into a file
      * @param   {[string]} fileName A file location with file name string
      * @param   {[string]} msg      A data to be saved
-     * @param   {[object]} callback A callback function
      */
-    static async toFile(fileName, msg, callback) {
+    static async toFile(fileName, msg) {
         try {
             let responseObject = {};
-            responseObject.msg = await fs.appendFile(fileName, msg);
+            responseObject.msg = fs.appendFile(fileName, msg, (err) => {
+                if (err) throw new Error(err);
+            });
             responseObject.status = 200;
             return responseObject;
         } catch (err) {

@@ -40,19 +40,19 @@ module.exports = class _USER {
         } else {
             user_permission = user_object['user_permission'];
         }
-
-        let result = await webkbuser.findOne({
+        let user = webkbuser.findOne({
             $or: [{
                     'user_username': username
                 },
                 {
-                    'use_email': user_object['email']
+                    'user_email': user_object['email']
                 }
             ]
         }).then(async ret => {
             if (ret) {
                 return {
-                    "message": "User already exsist",
+
+                    "message": "USER ALREADY EXSIST",
                     "status": false
                 };
             } else {
@@ -70,14 +70,18 @@ module.exports = class _USER {
                     user_secret_q: user_secret_q
                 });
                 await userObject.save();
+                return {
+
+                    'message': "NEW USER CREATED",
+                    'data': userObject
+
+                }
             }
         }).catch(err => {
             _UTILS.errorHandler(err, false, true);
+            return err;
         });
-        return {
-            "message": "User has been created",
-            "status": true
-        };
+        return user;
     }
     /**
      * Login function which will handle exsiting users login event
@@ -93,10 +97,15 @@ module.exports = class _USER {
         }).then(user => {
             if (!user) return false;
             if (user.user_psw === hashedPsw) return user;
-            if (user.user_psw === hashedPsw) return false;
+            if (user.user_psw !== hashedPsw) return false;
         }).catch(err => {
             _UTILS.errorHandler(err, false, true);
         });
+        let returnObject = {};
+        returnObject.user_username = user.user_username;
+        returnObject.user_permission = user.user_permission;
+        returnObject.user_email = user.user_email;
+        return returnObject;
     }
 
     /**

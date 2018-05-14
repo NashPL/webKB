@@ -12,7 +12,7 @@ const webkbuser = require('./../../mdb_schema/webkbuser');
 
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     if (!req.session.user) res.redirect('/');
     res.sendStatus(200);
 });
@@ -25,9 +25,12 @@ router.get('/', function(req, res, next) {
  * @param  {Function} next NEXT function
  * @return {[status]}      Send statnus code back to a user
  */
-router.post('/', function(req, res, next) {
-    if (!req.body) return res.sendStatu(400);
-
+router.post('/', (req, res, next) => {
+    if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
+        'err': {
+            'message': "NO POST DATA"
+        }
+    });
     let signinObject = {};
     signinObject.user_forname = req.body.user_forname;
     signinObject.user_surname = req.body.user_surname;
@@ -36,8 +39,7 @@ router.post('/', function(req, res, next) {
 
     let user = new _USER();
     user.new_user(req.body.usr, req.body.psw, signinObject).then(async newUser => {
-        if (newUser === false) return res.sendStatus(401);
-        if (newUser.status === false) return res.json(newUser);
+        if (newUser.status === false) return res.status(401).json(newUser);
         req.session.active = true;
         await webkbuser.findOne({
             'user_username': req.body.usr
@@ -45,13 +47,14 @@ router.post('/', function(req, res, next) {
             let uniqueID = _UTILS.getHashedValue(ret.user_email + Math.random());
             let userObject = ret;
             userObject.user_email_validation = uniqueID;
+            userObject.user_username = ret.user_username;
             user.send_conf_emial(ret.user_email, userObject);
             req.session.user = ret;
-            res.sendStatus(200);
+            return res.status(200).json(newUser);
         }).catch(err => {
             if (err) {
                 _UTILS.errorHanlder(err, false, true);
-                res.sendStatus(500);
+                return res.send(500).json(err);
             };
         });
     });
@@ -65,26 +68,40 @@ router.post('/', function(req, res, next) {
  * @param  {Function} next NEXT function
  * @return {[status]}      Send status code back to a user
  */
-router.get('/confirm/:id', function(req, res, next) {
-    client.get(req.params.id, function(err, result) {
+router.get('/confirm/:id', (req, res, next) => {
+    let param = (req.param.id === '');
+    if (param === '') return res.status(401).json({
+        'err': {
+            'message': "NOTHING FOUND"
+        }
+    });
+    client.get(req.params.id, (err, result) => {
         let resultObject = JSON.parse(result);
         webkbuser.findOne({
             'user_username': resultObject.user_username
-        }).exec(function(err, ret) {
-            if (!ret) return res.sendStatus(401);
-            if (resultObject.user_email !== ret.user_email) return res.sendStatu(401);
+        }).exec((err, ret) => {
+            if (!ret) return res.status(401).json({
+                'err': {
+                    'message': "NOTHING FOUND"
+                }
+            });
+            if (resultObject.user_email !== ret.user_email) return res.status(401).json({
+                'err': {
+                    'message': "NO EMAIL FOUND"
+                }
+            });
             let query = {
                 'user_username': ret.user_username
             };
             let newData = {};
             newData.user_email_validated = true;
-            webkbuser.findOneAndUpdate(query, newData, {}, function(err, doc) {
-                if (err) return _UTILS.errorHandler(err, false, true, null, function(callbackResponse) {
-                    if (callbackResponse.status === 500) {
-                        res.sendStatus(500);
+            webkbuser.findOneAndUpdate(query, newData, {}, (err, doc) => {
+                if (err) return _UTILS.errorHandler(err, false, true);
+                res.status(200).json({
+                    'success': {
+                        'message': "EMAIL HAS BEEN CONFIRMED"
                     }
                 });
-                res.sendStatus(200);
             });
         });
         upsert: true
