@@ -14,9 +14,10 @@ export class NavComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() { }
+
   openDialog(): void {
     let dialogRef = this.dialog.open(SigninComponent, {
-      width: '250px',
+      width: '450px',
       data: {}
     });
   }
