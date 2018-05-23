@@ -1,6 +1,6 @@
 <div class="container">
   <mat-dialog-content>
-    <mat-grid-list cols="1" rowHeight="100px">
+    <mat-grid-list cols="1" rowHeight="175px">
       <mat-grid-tile>
         <div class="container col-12">
           <div class="row">
@@ -20,35 +20,30 @@
         </div>
       </mat-grid-tile>
       <mat-grid-tile>
-        <div class="container">
+        <form class="container col-12" (ngSubmit)="loginSubmit(loginForm.form)" #loginForm="ngForm">
           <div class="row">
             <div class="container">
               <mat-form-field>
-                <input matInput placeholder="Username" [type]="text" class="col-12">
+                <input matInput ngModel placeholder="Username" [type]="text" class="col-12" name="usrname" #usrname="ngModel" required>
               </mat-form-field>
             </div>
           </div>
-
           <div class="container">
             <div class="row">
               <mat-form-field>
-                <input matInput placeholder="Enter your password" [type]="password" class="col-12">
+                <input matInput ngModel placeholder="Enter your password" [type]="password" class="col-12" name="psw" #psw="ngModel" required>
               </mat-form-field>
             </div>
           </div>
-        </div>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <div class="container">
           <div class="row">
             <div class="container">
-              <button type="button" role="button" class="btn btn-lg col btn-success">Login</button>
+              <button type="submit" role="button" class="btn btn-lg col btn-success">Login</button>
               <p class="pull-right">
                 <a href="#">Forgot Password</a>
               </p>
             </div>
           </div>
-        </div>
+        </form>
       </mat-grid-tile>
     </mat-grid-list>
   </mat-dialog-content>
