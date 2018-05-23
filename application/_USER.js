@@ -95,12 +95,15 @@ module.exports = class _USER {
         let user = await webkbuser.findOne({
             'user_username': username
         }).then(user => {
+
             if (!user) return false;
-            if (user.user_psw === hashedPsw) return user;
+            if (user === null) return false;
             if (user.user_psw !== hashedPsw) return false;
+            if (user.user_psw === hashedPsw) return user;
         }).catch(err => {
             _UTILS.errorHandler(err, false, true);
         });
+        if (user === false) return false;
         let returnObject = {};
         returnObject.user_username = user.user_username;
         returnObject.user_permission = user.user_permission;
@@ -131,9 +134,9 @@ module.exports = class _USER {
                 '<p><a href="http://localhost:3000/signin/confirm/' + object.user_email_validation + '"</a>http://localhost:3000/signin/confirm/' + object.user_email_validation + '</p>'
         };
 
-        await transporter.sendMail(mailOptions, async function(err, info) {
+        await transporter.sendMail(mailOptions, async function (err, info) {
             if (err) {
-                _UTILS.errorHandler(err, false, true, null, function(callbackResponse) {
+                _UTILS.errorHandler(err, false, true, null, function (callbackResponse) {
                     if (callbackResponse.status === 500) {
                         console.log(callbackResponse.msg);
                     }
@@ -176,7 +179,7 @@ module.exports = class _USER {
                 '<p><a href="http://localhost:3000/forgotPassword/' + hashedID + '"</a>http://localhost:3000/forgotPassword/' + hashedID + '</p>'
         };
 
-        await transporter.sendMail(mailOptions, async function(err, info) {
+        await transporter.sendMail(mailOptions, async function (err, info) {
             if (err) {
                 _UTILS.errorHandler(err, false, true);
             } else {
