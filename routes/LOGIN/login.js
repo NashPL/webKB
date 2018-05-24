@@ -59,10 +59,12 @@ router.post('/', async (req, res, next) => {
         if (ret === false) return res.sendStatus(401);
         req.session.active = true;
         req.session.user = ret;
+        console.log(req.sessionID);
         return res.status(200).json({
             'success': {
                 'message': 'YOU HAVE LOGGED IN',
-                'SESSION': req.session
+                'SESSION': req.session,
+                'token': req.sessionID
             }
         });
     }).catch(err => {

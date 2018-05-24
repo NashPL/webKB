@@ -9,9 +9,10 @@ const fs = require('fs');
 const session = require('express-session');
 const redis = require('redis');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const redisStore = require('connect-redis')(session);
-const client = redis.createClient();
 
+const client = redis.createClient();
 const app = express();
 
 const _UTILS = require('./application/_UTILS');
@@ -40,6 +41,15 @@ app.use(session({
     resave: false
 }));
 
+//enables cors
+app.use(cors({
+    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'exposedHeaders': ['sessionId'],
+    'origin': '*',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false
+}));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -64,7 +74,7 @@ app.engine('html', require('ejs').renderFile)
 require('./config/router')(app);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
