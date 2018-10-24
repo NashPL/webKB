@@ -32,8 +32,8 @@ app.use(session({
     secret: _UTILS.getHashedValue(),
     // create new redis store.
     store: new redisStore({
-        host: 'localhost',
-        port: 6379,
+        host: db['redis']['url'],
+        port: db['redis']['port'],
         client: client,
         ttl: 36000
     }),
