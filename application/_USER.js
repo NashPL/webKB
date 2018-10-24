@@ -1,9 +1,9 @@
 const _SECURITY = require('./_SECURITY');
 const _UTILS = require('./_UTILS');
+const _REDIS = require('./_REDIS');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const redis = require('redis');
-const client = redis.createClient(6379, 'localhost');
+const client = _REDIS.new_client();
 
 
 const webkbuser = require('./../mdb_schema/webkbuser');

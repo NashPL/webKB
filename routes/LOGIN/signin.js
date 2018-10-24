@@ -7,8 +7,11 @@ const client = redis.createClient(6379, 'localhost');
 const _USER = require('./../../application/_USER');
 const _SECURITY = require('./../../application/_SECURITY');
 const _UTILS = require('./../../application/_UTILS');
+const _REDIS = require('./../../application/_REDIS');
 
 const webkbuser = require('./../../mdb_schema/webkbuser');
+
+const client = _REDIS.new_client();
 
 const router = express.Router();
 
