@@ -71,7 +71,7 @@ describe('module/LOGIN/login.js', () => {
                 res.body.success['SESSION'].should.have.property('active').eql(true);
                 done();
             }).catch((err) => {
-                throw err;
+                done(err);
             });
     });
 
