@@ -9,9 +9,10 @@ const fs = require('fs');
 const session = require('express-session');
 const redis = require('redis');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const redisStore = require('connect-redis')(session);
-const client = redis.createClient();
 
+const client = redis.createClient();
 const app = express();
 
 const _UTILS = require('./application/_UTILS');
@@ -31,13 +32,22 @@ app.use(session({
     secret: _UTILS.getHashedValue(),
     // create new redis store.
     store: new redisStore({
-        host: 'localhost',
-        port: 6379,
+        host: db['redis']['url'],
+        port: db['redis']['port'],
         client: client,
         ttl: 36000
     }),
     saveUninitialized: false,
     resave: false
+}));
+
+//enables cors
+app.use(cors({
+    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'exposedHeaders': ['sessionId'],
+    'origin': '*',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false
 }));
 
 
@@ -64,7 +74,7 @@ app.engine('html', require('ejs').renderFile)
 require('./config/router')(app);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 

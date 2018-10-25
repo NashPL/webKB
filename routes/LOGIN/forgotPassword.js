@@ -1,27 +1,27 @@
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const redis = require('redis');
-const client = redis.createClient(6379, 'localhost');
 
 
 const _USER = require('./../../application/_USER');
 const _UTILS = require('./../../application/_UTILS');
+const _REDIS = require('./../../application/_REDIS');
 const webkbuser = require('./../../mdb_schema/webkbuser');
 
+const client = _REDIS.new_client();
 
 const router = express.Router();
 
-router.use('*', function(req, res, next) {
+router.use('*', function (req, res, next) {
     if (!req.session.user) res.redirect('/');
     next();
 })
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     res.sendStatus(200);
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
     if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
         'err': {
             'message': 'NO POST DATA'
@@ -45,7 +45,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
-router.post('/send', function(req, res, next) {
+router.post('/send', function (req, res, next) {
     if (req.body === undefined || (Object.keys(req.body).length === 0 && req.body.constructor === Object)) return res.status(400).json({
         'err': {
             'message': 'NO POST DATA'

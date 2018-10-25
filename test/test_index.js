@@ -110,7 +110,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['success'].should.have.property('message').eql('ENTRY HAS BEEN UPDATED');
                         done();
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         throw err;
                     });
             });
@@ -133,9 +133,9 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['success'].should.have.property('message').eql('YOU HAVE LOGGED OUT');
                         done();
-                    }).catch(function(err) {
-                        throw err;
-                    });
+                    })
+            }).catch((err) => {
+                done(err);
             });
     });
     it('/POST /logout => Attempt logout a user but dont send any post data to confirm the action', (done) => {
@@ -152,7 +152,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['err'].should.have.property('message').eql('NO POST DATA');
                         done();
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         throw err;
                     });
             });
@@ -174,7 +174,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['err'].should.have.property('message').eql('WRONG POST DATA');
                         done();
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         throw err;
                     });
             });
@@ -196,9 +196,9 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['success'].should.have.property('message').eql('YOU HAVE LOGGED OUT');
                         done();
-                    }).catch(function(err) {
-                        throw err;
-                    });
+                    })
+            }).catch(function (err) {
+                done(err);
             });
     });
 

@@ -15,7 +15,7 @@ const router = express.Router();
  * @param  {Function} next FUNCTION next
  * @return {[Function]}    Carry on with a code
  */
-router.use('*', function(req, res, next) {
+router.use('*', function (req, res, next) {
     if (!req.session.user) res.redirect('/');
     next();
 })
@@ -27,7 +27,7 @@ router.use('*', function(req, res, next) {
  * @param  {Function} next FUNCTION next
  * @return {[status]}      Sends status code back to a user
  */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     res.sendStatus(200);
 });
 
@@ -59,10 +59,12 @@ router.post('/', async (req, res, next) => {
         if (ret === false) return res.sendStatus(401);
         req.session.active = true;
         req.session.user = ret;
+        console.log(req.sessionID);
         return res.status(200).json({
             'success': {
                 'message': 'YOU HAVE LOGGED IN',
-                'SESSION': req.session
+                'SESSION': req.session,
+                'token': req.sessionID
             }
         });
     }).catch(err => {

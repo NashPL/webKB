@@ -1,0 +1,54 @@
+<div class="container">
+  <mat-dialog-content>
+    <mat-grid-list cols="1" rowHeight="175px">
+      <mat-grid-tile>
+        <div class="container col-12">
+          <div class="row">
+            <div class="col container">
+              <p class="h1">
+                Log In
+                <button href="#" [mat-dialog-close]="true" class="pull-right btn btn-outline-info btn-sm">
+                  <i class="fa fa-times"></i>
+                </button>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="container">
+              <p class="h5">
+                New User?
+                <a href="#">Create an Account</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form class="container col-12" (ngSubmit)="loginSubmit(loginForm.form)" #loginForm="ngForm">
+          <div class="row">
+            <div class="container">
+              <mat-form-field>
+                <input matInput ngModel placeholder="Username" [type]="text" class="col-12" name="usrname" #usrname="ngModel">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <mat-form-field>
+                <input matInput ngModel placeholder="Enter your password" type="password" class="col-12" name="psw" #psw="ngModel">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="container">
+              <button type="submit" role="button" class="btn btn-lg col btn-success">Login</button>
+              <p class="pull-right">
+                <a href="#">Forgot Password</a>
+              </p>
+            </div>
+          </div>
+        </form>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-dialog-content>
+</div>
