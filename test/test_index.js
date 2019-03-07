@@ -120,9 +120,12 @@ describe('index.js', () => {
         let loginInfo = {};
         loginInfo.usr = 'testuser';
         loginInfo.psw = 'mochatesting197';
+
         let agent = chai.request.agent(app);
+
         let json = {};
         json.logout = true;
+        
         agent.post('/login')
             .send(loginInfo)
             .then((res) => {

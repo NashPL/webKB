@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "test") {
     //TODO: ADD TEST MONGODB URL
 }
 
-mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main');
+mongoose.connect('mongodb://' + db['mongodb']['url'] + '/webKB-main', { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 
