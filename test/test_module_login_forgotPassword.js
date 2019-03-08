@@ -28,11 +28,10 @@ describe('module/LOGIN/forgotPassword.js', () => {
             "user_surname": "TEST_USER_SURNAME",
             "user_email": "kbuczynski@outlook.com",
             "user_dob": "2018-01-1",
-            "user_secret_p": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "user_secret_p": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
             "user_secret_q": "123"
         });
         user.save();
-
         hashedID = "FORGOTEN" + "kbuczynski@outlook.com";
         client.set(hashedID, JSON.stringify({
             "forgot_confirmed": true,
@@ -144,11 +143,10 @@ describe('module/LOGIN/forgotPassword.js', () => {
     });
 
     it('/POST /send => Post request with no anwser provided', (done) => {
+        const json = {'email': 'kbuczynski@outlook.com'};
         chai.request(app)
             .post('/forgotPassword/send')
-            .send({
-                'email': 'kbuczynski@outlook.com'
-            })
+            .send(json)
             .then((res) => {
                 res.should.have.status(400);
                 res.body.should.be.a('object');
@@ -157,23 +155,24 @@ describe('module/LOGIN/forgotPassword.js', () => {
             }).catch((err) => {
                 throw err;
             });
+            
     });
 
     it('/POST /send => Post request with wrong anwser given', (done) => {
+        const json = { 'email': 'kbuczynski@outlook.com', 'answer': '123'};
         chai.request(app)
             .post('/forgotPassword/send')
-            .send({
-                'email': 'kbuczynski@outlook.com',
-                'answer': '123'
-            })
+            .send(json)
             .then((res) => {
-                res.should.have.status(200);
+                res.should.have.status(400);
                 res.body.should.be.a('object');
-                res.body.success.should.have.property('message').eql('OK');
+                console.log(res.body);
+                res.body.err.should.have.property('message').eql('WRONG ANWSER GIVEN');
                 done();
             }).catch((err) => {
-                throw err;
+                done(err);
             });
+            
     });
 
     it('/POST /send => Post request send correct data', (done) => {
@@ -184,9 +183,9 @@ describe('module/LOGIN/forgotPassword.js', () => {
                 'answer': '1234'
             })
             .then((res) => {
-                res.should.have.status(400);
+                res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.err.should.have.property('message').eql('WRONG ANWSER GIVEN');
+                res.body.success.should.have.property('message').eql('OK');
                 done();
             }).catch((err) => {
                 throw err;
@@ -260,11 +259,13 @@ describe('module/LOGIN/forgotPassword.js', () => {
     after('Remove reddis entry', (done) => {
         client.del(hashedID);
         client.del("TEST_KEY_REDIS_123");
-        webkbuser.remove({
-            "user_username": "testuser"
-        }, (err) => {
-            if (err) throw err;
+        const query = {"user_username": "testuser"};
+        webkbuser.deleteOne(query)
+        .then((res) => {
+            done(res.deleteCount);
+        })
+        .catch((err) => {
+            throw err;
         });
-        done();
     });
 });

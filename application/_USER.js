@@ -32,8 +32,8 @@ module.exports = class _USER {
         let user_dob = user_object['dob'];
         let user_email = user_object['email'];
         let user_permission = '';
-        let user_secret_p = user_object['user_secret_p'];
-        let user_secret_q = _UTILS.getHashedValue(user_object['user_secret_q']);
+        let user_secret_q = user_object['user_secret_q'];
+        let user_secret_p = _UTILS.getHashedValue(user_object['user_secret_p']);
 
         if (!user_object['user_permission']) {
             user_permission = "*";
@@ -95,7 +95,6 @@ module.exports = class _USER {
         let user = await webkbuser.findOne({
             'user_username': username
         }).then(user => {
-
             if (!user) return false;
             if (user === null) return false;
             if (user.user_psw !== hashedPsw) return false;

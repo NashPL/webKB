@@ -119,12 +119,12 @@ router.post('/logout', function (req, res, next) {
             'message': 'WRONG POST DATA'
         }
     });
-    if (!req.body.sessionId || req.body.sessionId === undefined) return res.status(400).json({
+    if (!req.sessionID || req.sessionID === undefined) return res.status(400).json({
         'err': {
             'message': 'WRONG POST DATA'
         }
     });
-    client.del(req.body.sessionId);
+    client.del(req.sessionID);
     req.session.destroy();
     res.status(200).json({
         'success': {

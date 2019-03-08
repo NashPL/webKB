@@ -27,8 +27,8 @@ describe('module/LOGIN/signing.js', () => {
             "user_surname": "TEST_USER_SURNAME",
             "user_email": "kbuczynski@outlook.com",
             "user_dob": "2018-01-1",
-            "user_secret_q": "595fb164ade516fec89f677c8bd8ff3e50e80ef703fd3bbf2a17eddd092a54bc",
-            "user_secret_p": "123"
+            "user_secret_q": "123",
+            "user_secret_p": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
         });
         user.save();
         done();

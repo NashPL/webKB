@@ -8,9 +8,31 @@ const chaiHttp = require('chai-http');
 const app = require('../app');
 const should = chai.should();
 
+const webkbuser = require('./../mdb_schema/webkbuser');
+
 chai.use(chaiHttp);
 
 describe('module/LOGIN/login.js', () => {
+    before('set mongo user', (done) => {
+
+        let user = new webkbuser({
+            "user_permission": [
+                "*",
+                "ADMIN"
+            ],
+            "user_username": "testuser",
+            "user_psw": "c66b7e1c0d25fcccef09a0702e0ac2351291bb6336d1d7e4e034735488614248",
+            "user_forname": "TEST_USER_FORNAME",
+            "user_surname": "TEST_USER_SURNAME",
+            "user_email": "kbuczynski@outlook.com",
+            "user_dob": "2018-01-1",
+            "user_secret_q": "123",
+            "user_secret_p": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+        });
+        user.save();
+        done();
+    });
+
     it('/POST / => It should attempt a login POST but with no data returing status 400', (done) => {
         chai.request(app)
             .post('/login')
@@ -71,7 +93,7 @@ describe('module/LOGIN/login.js', () => {
                 res.body.success['SESSION'].should.have.property('active').eql(true);
                 done();
             }).catch((err) => {
-                done(err);
+                throw(err);
             });
     });
 

@@ -28,8 +28,8 @@ describe('index.js', () => {
             "user_surname": "TEST_USER_SURNAME",
             "user_email": "kbuczynski@outlook.com",
             "user_dob": "2018-01-1",
-            "user_secret_q": "595fb164ade516fec89f677c8bd8ff3e50e80ef703fd3bbf2a17eddd092a54bc",
-            "user_secret_p": "123"
+            "user_secret_q": "123",
+            "user_secret_p": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
         });
         user.save();
         done();
@@ -110,7 +110,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['success'].should.have.property('message').eql('ENTRY HAS BEEN UPDATED');
                         done();
-                    }).catch(function (err) {
+                    }).catch((err) => {
                         throw err;
                     });
             });
@@ -138,7 +138,7 @@ describe('index.js', () => {
                         done();
                     })
             }).catch((err) => {
-                done(err);
+                throw(err);
             });
     });
     it('/POST /logout => Attempt logout a user but dont send any post data to confirm the action', (done) => {
@@ -155,7 +155,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['err'].should.have.property('message').eql('NO POST DATA');
                         done();
-                    }).catch(function (err) {
+                    }).catch((err) => {
                         throw err;
                     });
             });
@@ -177,7 +177,7 @@ describe('index.js', () => {
                         res.body.should.be.a('object');
                         res.body['err'].should.have.property('message').eql('WRONG POST DATA');
                         done();
-                    }).catch(function (err) {
+                    }).catch((err) => {
                         throw err;
                     });
             });
@@ -200,17 +200,19 @@ describe('index.js', () => {
                         res.body['success'].should.have.property('message').eql('YOU HAVE LOGGED OUT');
                         done();
                     })
-            }).catch(function (err) {
-                done(err);
+            }).catch((err) => {
+                throw(err);
             });
     });
 
     after('Remove reddis entry', (done) => {
-        webkbuser.remove({
-            "user_username": "testuser"
-        }, (err) => {
-            if (err) throw err;
-        });
-        done();
+        const query = {"user_name": "testuser"};
+        webkbuser.deleteOne(query)
+        .then((res)=>{
+            done(res.deletedCount);
+        })
+        .catch((err)=>{
+            throw(err);
+        })
     });
 });
