@@ -166,7 +166,6 @@ describe('module/LOGIN/forgotPassword.js', () => {
             .then((res) => {
                 res.should.have.status(400);
                 res.body.should.be.a('object');
-                console.log(res.body);
                 res.body.err.should.have.property('message').eql('WRONG ANWSER GIVEN');
                 done();
             }).catch((err) => {
