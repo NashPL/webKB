@@ -1,0 +1,10 @@
+{
+    "title": "WebKB",
+    "router": {
+        "index": {
+            "title": "Home",
+            "href": "/",
+            "fav": ""
+        }
+    }
+}
