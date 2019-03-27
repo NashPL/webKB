@@ -4,7 +4,10 @@
         "index": {
             "title": "Home",
             "href": "/",
-            "fav": ""
+            "fav": "",
+            "perm": [
+                "*"
+            ]
         }
     }
 }

@@ -1,19 +1,9 @@
 const express = require('express');
-const session = require('express-session');
-const mongoose = require('mongoose');
-const path = require('path');
 const fs = require('fs');
-
-const _SECURITY = require('../application/_SECURITY');
-const _UTILS = require('../application/_UTILS');
-const _REDIS = require('../application/_REDIS');
-
-const webkbmodule = require('../mdb_schema/webkbmodule');
-const client = _REDIS.new_client();
 
 const router = express.Router();
 
-const menuJSON =  JSON.parse(fs.readFileSync('./config/configFiles/menu.json', 'utf8'));
+const menuJSON = JSON.parse(fs.readFileSync('./config/configFiles/menu.json', 'utf8'));
 
 /**
  * Function returns menu structore of the application
